@@ -1,25 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
-function App() {
+import { json } from "./temps";
+
+import { Scatter } from "react-chartjs-2";
+
+console.log(json);
+const temperatures = json.map((dataArray) => {
+  const payload = dataArray.payload;
+  const jsonPayload = JSON.parse(payload);
+  return jsonPayload.temperature;
+});
+
+const humidities = json.map((dataArray) => {
+  const payload = dataArray.payload;
+  const jsonPayload = JSON.parse(payload);
+  return jsonPayload.humidity;
+});
+
+const data = [];
+
+for (let i = 0; i < temperatures.length; i++) {
+  data.push({ x: temperatures[i], y: humidities[i] });
+}
+
+console.log(data);
+
+// データの処理
+const dataset = {
+  datasets: [
+    {
+      label: "湿度と気温の散布図",
+      data: data,
+      backgroundColor: "rgba(255, 99, 132, 1)",
+    },
+  ],
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>データの可視化</h1>
+      <Scatter data={dataset} />
     </div>
   );
-}
+};
 
 export default App;
